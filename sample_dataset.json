@@ -1,0 +1,71 @@
+{
+  "protocol": "SlaErrorBudgetAuditor/v1.0",
+  "repository": "dorinalunar/sla-error-budget-auditor",
+  "scenarios": [
+    {
+      "epoch_id": "epoch-2026-10-eu",
+      "description": "Overlapping affected outages merged deterministically with one unaffected incident",
+      "charter": {
+        "service_tier": "Sequencer RPC gateway",
+        "deployment_zone": "eu-central-1",
+        "window_start": "2026-10-05T12:00:00Z",
+        "window_end": "2026-10-06T12:00:00Z",
+        "error_budget_sec": 3600,
+        "outage_refs": [
+          "INC-101",
+          "INC-102",
+          "INC-103"
+        ],
+        "artifact": {
+          "url": "https://raw.githubusercontent.com/dorinalunar/sla-error-budget-auditor/a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4/reports/october_postmortem.md",
+          "sha256": "246c2e4859b13bea39b825264deb269d641af3bef2dfa5713b12aed60832d20c"
+        }
+      },
+      "document_body": "INC-101: Sequencer RPC gateway in eu-central-1 suffered complete unavailability starting at 2026-10-05T14:00:00Z due to BGP route leak; full service recovery achieved at 2026-10-05T14:45:00Z.\nINC-102: Sequencer RPC gateway in eu-central-1 experienced a secondary outage at 2026-10-05T14:30:00Z during failover; service was fully restored at 2026-10-05T15:15:00Z.\nINC-103: Analytics indexer in us-west-2 had elevated latency at 2026-10-06T09:00:00Z; eu-central-1 Sequencer RPC gateway experienced no outage and remained unaffected.\n",
+      "mock_llm_records": [
+        {
+          "ref_id": "INC-101",
+          "impact": "AFFECTED",
+          "impact_excerpt": "INC-101: Sequencer RPC gateway in eu-central-1 suffered complete unavailability",
+          "resolution": "RESTORED",
+          "onset_utc": "2026-10-05T14:00:00Z",
+          "resolved_utc": "2026-10-05T14:45:00Z",
+          "onset_excerpt": "INC-101: Sequencer RPC gateway in eu-central-1 suffered complete unavailability starting at 2026-10-05T14:00:00Z",
+          "resolved_excerpt": "full service recovery achieved at 2026-10-05T14:45:00Z."
+        },
+        {
+          "ref_id": "INC-102",
+          "impact": "AFFECTED",
+          "impact_excerpt": "INC-102: Sequencer RPC gateway in eu-central-1 experienced a secondary outage",
+          "resolution": "RESTORED",
+          "onset_utc": "2026-10-05T14:30:00Z",
+          "resolved_utc": "2026-10-05T15:15:00Z",
+          "onset_excerpt": "INC-102: Sequencer RPC gateway in eu-central-1 experienced a secondary outage at 2026-10-05T14:30:00Z",
+          "resolved_excerpt": "service was fully restored at 2026-10-05T15:15:00Z."
+        },
+        {
+          "ref_id": "INC-103",
+          "impact": "UNAFFECTED",
+          "impact_excerpt": "INC-103: Analytics indexer in us-west-2 had elevated latency at 2026-10-06T09:00:00Z; eu-central-1 Sequencer RPC gateway experienced no outage and remained unaffected.",
+          "resolution": "UNKNOWN",
+          "onset_utc": "",
+          "resolved_utc": "",
+          "onset_excerpt": "",
+          "resolved_excerpt": ""
+        }
+      ],
+      "expected_accounting": {
+        "accounting_status": "COMPLETE",
+        "downtime_seconds": 4500,
+        "uptime_ppm": 947916,
+        "budget_breached": true,
+        "merged_intervals": [
+          [
+            7200,
+            11700
+          ]
+        ]
+      }
+    }
+  ]
+}
